@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Firework Simulator</title>
+    <link rel="stylesheet" href="style.css">
+    
+    
+</head>
+
+<body>
+    <header>
+        <h1>Feuerwerk Simulator</h1>
+    </header>
+    <div class="container">
+        <!--Linker Bereich zum Design-->
+
+        <aside class="controls">
+            <div class="rocket-editor">
+                <label for="rocketName">Raketenname:</label>
+                <input type="text" id="rocketName" placeholder="Name der Rakete">
+
+                <div class="parameters">
+                    <!--Farbe-->
+                    <label for="rocketColor">Farbe:</label>
+                    <input type="color" id="rocketColor" value="#ff0000">
+
+                    <!--Partikelgeschwindigkeit-->
+                    <label for="particleSpeed">Partikel Geschwindigkeit:</label>
+                    <input type="range" id="particleSpeed" min="1" max="6" value="3">
+
+                    <!--Fade Dauer-->
+                    <label for="fadeDuration">Fade-Dauer (sekunden):</label>
+                    <input type="range" id="fadeDuration" min="1" max="6" value="3">
+
+                    <!--Explosionsradius-->
+                    <label for="explosionRadius">Explosionsradius:</label>
+                    <input type="range" id="explosionRadius" min="10" max="100" value="50">
+
+                    <!--Anzahl Partikel-->
+                    <label for="particleCount">Anzahl Partikel:</label>
+                    <input type="range" id="particleCount" min="10" max="100" value="50">
+                </div>
+            </div>
+
+            <div class="action-buttons">
+                <button id="saveBtn">Speichern</button>
+                <button id="resetBtn">Reset</button>
+                <button id="deleteBtn">Löschen</button>
+            </div>
+        </aside>
+
+        <!--Vorschau Bereich-->
+        <main class="preview-area">
+            <h2>Preview</h2>
+            <canvas id="previewCanvas" width="500" height="400"></canvas>
+        </main>
+
+
+        <!--Rechter Bereich, Dropdown-->
+        <aside class="saved-rockets">
+            <select id="savedRockets">
+                <option value="">-- Gespeicherte Raketen --</option>
+            </select>
+        </aside>
+    </div>
+
+    <script type="module" src="main.js"></script>
+</body>
+
+</html>
