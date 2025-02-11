@@ -112,7 +112,7 @@ export function updateSavedDropdown(rockets?: RocketConfig[]): void {
       }
   }
 
-  console.log("🔹 Aktualisiere Dropdown mit gespeicherten Raketen:", rockets);
+  console.log("Aktualisiere Dropdown mit gespeicherten Raketen:", rockets);
 
   dropdown.innerHTML = `<option value="">-- Gespeicherte Raketen --</option>`;
   rockets.forEach((rocket, index) => {
@@ -124,10 +124,10 @@ export function updateSavedDropdown(rockets?: RocketConfig[]): void {
       option.value = index.toString();
       option.textContent = rocket.name;
       dropdown.appendChild(option);
-      console.log(`✅ Rakete hinzugefügt: ${rocket.name}`);
+      console.log(`Rakete hinzugefügt: ${rocket.name}`);
   });
 
-  console.log("✅ Dropdown erfolgreich aktualisiert.");
+  console.log("Dropdown erfolgreich aktualisiert.");
 }
 
 
