@@ -8,13 +8,11 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 import { FireworkManager } from "./firework.js";
-import { getRocketConfig, saveRocketConfig, loadRocketsFromMingidb, updateSavedDropdown } from "./designer.js";
+import { getRocketConfig, saveRocketConfig, loadRocketsFromMingidb } from "./designer.js";
 window.addEventListener('DOMContentLoaded', () => __awaiter(void 0, void 0, void 0, function* () {
     const canvas = document.getElementById('previewCanvas');
     const fireworkManager = new FireworkManager(canvas);
-    // Lade gespeicherte Raketen von mingidb beim Start
     yield loadRocketsFromMingidb();
-    //  Event-Listener für Klick auf Canvas -> Explosion erzeugen
     canvas.addEventListener('click', (event) => {
         const rect = canvas.getBoundingClientRect();
         const x = event.clientX - rect.left;
@@ -22,18 +20,15 @@ window.addEventListener('DOMContentLoaded', () => __awaiter(void 0, void 0, void
         const config = getRocketConfig();
         fireworkManager.createExplosion(x, y, config);
     });
-    // Speichern-Button: Speichert die aktuelle Konfiguration
     const saveBtn = document.getElementById('saveBtn');
     saveBtn.addEventListener('click', () => __awaiter(void 0, void 0, void 0, function* () {
         const config = getRocketConfig();
-        // Überprüfen, ob ein Name eingegeben wurde
         if (!config.name) {
             alert("Bitte gib der Rakete einen Namen!");
             return;
         }
-        yield saveRocketConfig(config); // Speichern auf mingidb
+        yield saveRocketConfig(config);
     }));
-    //  Reset-Button: Setzt die Eingabefelder auf Standardwerte zurück
     const resetBtn = document.getElementById('resetBtn');
     resetBtn.addEventListener('click', () => {
         document.getElementById('rocketName').value = '';
@@ -43,13 +38,10 @@ window.addEventListener('DOMContentLoaded', () => __awaiter(void 0, void 0, void
         document.getElementById('particleSpeed').value = '5';
         document.getElementById('fadeDuration').value = '3';
     });
-    // Dropdown: Bei Auswahl einer gespeicherten Rakete, lade die Parameter in die Eingabefelder.
     const savedDropdown = document.getElementById('savedRockets');
     savedDropdown.addEventListener('change', () => {
-        // Falls keine Auswahl getroffen wurde, tue nichts
         if (!savedDropdown.value)
             return;
-        // Hole die gespeicherten Raketen
         const savedRockets = JSON.parse(localStorage.getItem('savedRockets') || '[]');
         const selectedIndex = parseInt(savedDropdown.value, 10);
         const rocket = savedRockets[selectedIndex];
@@ -62,9 +54,6 @@ window.addEventListener('DOMContentLoaded', () => __awaiter(void 0, void 0, void
             document.getElementById('fadeDuration').value = rocket.fadeDuration.toString();
         }
     });
-    //  Dropdown beim Start aktualisieren (falls localStorage bereits Daten hat)
-    updateSavedDropdown();
-    //  Animationsloop starten
     function animate() {
         fireworkManager.update();
         requestAnimationFrame(animate);

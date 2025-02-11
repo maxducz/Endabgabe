@@ -6,7 +6,7 @@ window.addEventListener('DOMContentLoaded', async () => {
     const fireworkManager = new FireworkManager(canvas);
 
     await loadRocketsFromMingidb();
-    
+
     canvas.addEventListener('click', (event: MouseEvent) => {
         const rect = canvas.getBoundingClientRect();
         const x = event.clientX - rect.left;

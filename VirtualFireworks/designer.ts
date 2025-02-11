@@ -44,10 +44,15 @@ export async function loadRocketsFromMingidb(): Promise<void> {
       const response = await fetch(`https://7c8644f9-f81d-49cd-980b-1883574694b6.fr.bw-cloud-instance.org/mdu48352/mingidb.php?${query.toString()}`);
       const responseData = await response.json();
 
+      console.log("Rohdaten von mingidb:", responseData);
+
       let rockets: RocketConfig[] = [];
 
-      if (responseData.status === "success" && responseData.data && Array.isArray(responseData.data.data)) {
-          rockets = responseData.data.data;
+      
+      if (responseData.status === "success" && responseData.data) {
+        console.log("Gefundene Raketen:", responseData.data)
+          if (Array.isArray(responseData.data)) {
+          }
       } else {
           console.warn("Unerwartetes Datenformat von mingidb:", responseData);
       }
@@ -56,13 +61,18 @@ export async function loadRocketsFromMingidb(): Promise<void> {
           console.warn("Keine Raketen in mingidb gefunden.");
       }
 
+      // Speichern der geladenen Raketen im localStorage
       localStorage.setItem("savedRockets", JSON.stringify(rockets));
 
+      // Dropdown mit den geladenen Raketen aktualisieren
       updateSavedDropdown(rockets);
   } catch (error) {
       console.error("Fehler beim Laden der Daten von mingidb:", error);
   }
 }
+
+
+
 
 
 /**
@@ -100,8 +110,8 @@ export function updateSavedDropdown(rockets?: RocketConfig[]): void {
   if (!rockets || !Array.isArray(rockets)) {
       rockets = JSON.parse(localStorage.getItem('savedRockets') || '[]');
 
-      if(!Array.isArray(rockets)) {
-        rockets = [];
+      if (!Array.isArray(rockets)) {
+          rockets = [];
       }
   }
 
@@ -109,6 +119,7 @@ export function updateSavedDropdown(rockets?: RocketConfig[]): void {
 
   dropdown.innerHTML = `<option value="">-- Gespeicherte Raketen --</option>`;
   rockets.forEach((rocket, index) => {
+      if (!rocket.name) return;
       const option = document.createElement('option');
       option.value = index.toString();
       option.textContent = rocket.name;
@@ -117,6 +128,4 @@ export function updateSavedDropdown(rockets?: RocketConfig[]): void {
 
   console.log("Dropdown erfolgreich aktualisiert.");
 }
-
-
 
