@@ -119,3 +119,4 @@ export function updateSavedDropdown(rockets) {
     });
     console.log("Dropdown erfolgreich aktualisiert.");
 }
+//# sourceMappingURL=designer.js.map

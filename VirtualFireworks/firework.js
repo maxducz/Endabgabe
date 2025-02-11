@@ -73,3 +73,4 @@ function hexToRGBA(hex, alpha) {
     const b = parseInt(hex.substring(4, 6), 16);
     return `rgba(${r}, ${g}, ${b}, ${alpha})`;
 }
+//# sourceMappingURL=firework.js.map

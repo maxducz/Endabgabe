@@ -60,3 +60,4 @@ window.addEventListener('DOMContentLoaded', () => __awaiter(void 0, void 0, void
     }
     animate();
 }));
+//# sourceMappingURL=main.js.map
