@@ -1,10 +1,20 @@
-// main.ts
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
 import { FireworkManager } from "./firework.js";
-import { getRocketConfig, saveRocketConfig, updateSavedDropdown, deleteRocketConfig } from "./designer.js";
-window.addEventListener('DOMContentLoaded', () => {
+import { getRocketConfig, saveRocketConfig, loadRocketsFromMingidb, updateSavedDropdown } from "./designer.js";
+window.addEventListener('DOMContentLoaded', () => __awaiter(void 0, void 0, void 0, function* () {
     const canvas = document.getElementById('previewCanvas');
     const fireworkManager = new FireworkManager(canvas);
-    // Beim Klick auf das Canvas eine Explosion erzeugen
+    // Lade gespeicherte Raketen von mingidb beim Start
+    yield loadRocketsFromMingidb();
+    //  Event-Listener für Klick auf Canvas -> Explosion erzeugen
     canvas.addEventListener('click', (event) => {
         const rect = canvas.getBoundingClientRect();
         const x = event.clientX - rect.left;
@@ -14,16 +24,16 @@ window.addEventListener('DOMContentLoaded', () => {
     });
     // Speichern-Button: Speichert die aktuelle Konfiguration
     const saveBtn = document.getElementById('saveBtn');
-    saveBtn.addEventListener('click', () => {
+    saveBtn.addEventListener('click', () => __awaiter(void 0, void 0, void 0, function* () {
         const config = getRocketConfig();
         // Überprüfen, ob ein Name eingegeben wurde
         if (!config.name) {
             alert("Bitte gib der Rakete einen Namen!");
             return;
         }
-        saveRocketConfig(config);
-    });
-    // Reset-Button: Setzt die Eingabefelder auf Standardwerte zurück
+        yield saveRocketConfig(config); // Speichern auf mingidb
+    }));
+    //  Reset-Button: Setzt die Eingabefelder auf Standardwerte zurück
     const resetBtn = document.getElementById('resetBtn');
     resetBtn.addEventListener('click', () => {
         document.getElementById('rocketName').value = '';
@@ -32,17 +42,6 @@ window.addEventListener('DOMContentLoaded', () => {
         document.getElementById('rocketColor').value = '#ff0000';
         document.getElementById('particleSpeed').value = '5';
         document.getElementById('fadeDuration').value = '3';
-    });
-    // Delete-Button: Löscht die aktuell im Dropdown ausgewählte Rakete
-    const deleteBtn = document.getElementById('deleteBtn');
-    deleteBtn.addEventListener('click', () => {
-        const savedDropdown = document.getElementById('savedRockets');
-        if (!savedDropdown.value) {
-            alert("Bitte wähle eine Rakete aus dem Dropdown aus, die gelöscht werden soll!");
-            return;
-        }
-        const selectedIndex = parseInt(savedDropdown.value, 10);
-        deleteRocketConfig(selectedIndex);
     });
     // Dropdown: Bei Auswahl einer gespeicherten Rakete, lade die Parameter in die Eingabefelder.
     const savedDropdown = document.getElementById('savedRockets');
@@ -63,12 +62,12 @@ window.addEventListener('DOMContentLoaded', () => {
             document.getElementById('fadeDuration').value = rocket.fadeDuration.toString();
         }
     });
-    // Dropdown beim Start aktualisieren
+    //  Dropdown beim Start aktualisieren (falls localStorage bereits Daten hat)
     updateSavedDropdown();
-    // Animationsloop starten
+    //  Animationsloop starten
     function animate() {
         fireworkManager.update();
         requestAnimationFrame(animate);
     }
     animate();
-});
+}));
