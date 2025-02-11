@@ -40,22 +40,27 @@ export function loadRocketsFromMingidb() {
         try {
             const response = yield fetch(`https://7c8644f9-f81d-49cd-980b-1883574694b6.fr.bw-cloud-instance.org/mdu48352/mingidb.php?${query.toString()}`);
             const responseData = yield response.json();
-            console.log("Rohdaten von mingidb:", responseData);
+            console.log("🔹 Rohdaten von mingidb:", responseData);
             let rockets = [];
+            // Daten aus der Datenbank ins rockets-Array einfügen
             if (responseData.status === "success" && responseData.data) {
-                console.log("Gefundene Raketen:", responseData.data);
                 if (Array.isArray(responseData.data)) {
+                    rockets = responseData.data;
+                }
+                else if (typeof responseData.data === "object") {
+                    rockets = Object.keys(responseData.data).map(key => responseData.data[key]); // Kompatible Alternative
+                }
+                else {
+                    console.warn("Unerwartetes Format der Daten:", responseData.data);
                 }
             }
             else {
-                console.warn("Unerwartetes Datenformat von mingidb:", responseData);
+                console.warn("Daten konnten nicht aus mingidb geladen werden:", responseData);
             }
             if (rockets.length === 0) {
                 console.warn("Keine Raketen in mingidb gefunden.");
             }
-            // Speichern der geladenen Raketen im localStorage
             localStorage.setItem("savedRockets", JSON.stringify(rockets));
-            // Dropdown mit den geladenen Raketen aktualisieren
             updateSavedDropdown(rockets);
         }
         catch (error) {
@@ -99,15 +104,18 @@ export function updateSavedDropdown(rockets) {
             rockets = [];
         }
     }
-    console.log("Aktualisiere Dropdown mit gespeicherten Raketen:", rockets);
+    console.log("🔹 Aktualisiere Dropdown mit gespeicherten Raketen:", rockets);
     dropdown.innerHTML = `<option value="">-- Gespeicherte Raketen --</option>`;
     rockets.forEach((rocket, index) => {
-        if (!rocket.name)
+        if (!rocket.name) {
+            console.warn(`⚠ Rakete an Index ${index} hat keinen Namen und wird übersprungen.`);
             return;
+        }
         const option = document.createElement('option');
         option.value = index.toString();
         option.textContent = rocket.name;
         dropdown.appendChild(option);
+        console.log(`✅ Rakete hinzugefügt: ${rocket.name}`);
     });
-    console.log("Dropdown erfolgreich aktualisiert.");
+    console.log("✅ Dropdown erfolgreich aktualisiert.");
 }
